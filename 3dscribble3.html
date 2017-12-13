@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <meta name="HandheldFriendly" content="True" />
+    <title>3dscribble2</title>
+</head>
+<body>
+<canvas id="c">Sorry, your browser does not support canvas.</canvas>
+<script>
+    var experiment = {};
+    experiment.setup = function () {
+
+        // check if the browser has any idea if we can do the setup yet
+        if (!window.innerWidth) {
+            setTimeout(experiment.setup, 500);
+            return;
+        }
+
+        // grab canvas and drawing context
+        var canvas = document.getElementById('c'), context = canvas.getContext('2d');
+        if(!context){
+            return;
+        }
+
+        // some css tweaks
+        document.body.style.background = "#000000";
+        document.body.style.margin = 0;
+        document.body.style.overflow = "hidden";
+
+        // fill canvas to browser size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // draw here
+        //context.fillStyle = "hsl(" + Math.floor(Math.random() * 360) + ", 50%, 20%)";
+        context.fillStyle = "#2c3e50";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        //context.strokeStyle = "hsl(" + Math.floor(Math.random() * 360) + ", 50%, 80%)";
+        context.strokeStyle = "#ecf0f1";
+
+        var fl = 400;
+        var vpX = canvas.width / 2;
+        var vpY = canvas.height / 2;
+
+        var p = new Array();
+        var numPoints = 4096;
+        var lineSize = 40;
+        var Lx = 0, Ly = 0; Lz = 0; var q = (canvas.height > canvas.width) ? canvas.width/2 : canvas.height/2;
+        for (var i = 0; i<numPoints; i++) {
+            p[i] = new Object();
+            d = Math.round(Math.random()) ? lineSize : -lineSize;
+            r = Math.random() * 3;
+            //if (r > 2) Lx = (Lx + d > q || Lx + d < -q) ? -Lx / 2 : Lx + d;
+            //if (r < 1) Ly = (Ly + d > q || Ly + d < -q) ? -Ly / 2 : Ly + d;
+            //if (r < 2 && r > 1) Lz = (Lz > q || Lz < -q) ? -Lz / 2 : Lz + d;
+            if (r > 2) Lx = Lx + d;
+            if (r < 1) Ly = Ly + d;
+            if (r < 2 && r > 1) Lz = Lz + d;
+            p[i].x =  Lx;
+            p[i].y = Ly;
+            p[i].z = Lz;
+        }
+
+
+        var angleY = Math.random();
+        var cosY = Math.cos(angleY);
+        var sinY = Math.sin(angleY);
+
+        var angleX = Math.random();
+        var cosX = Math.cos(angleX);
+        var sinX = Math.sin(angleX);
+
+        for (var i=0;i<numPoints;i++) {
+
+            var x1 = p[i].x * cosY - p[i].z * sinY;
+            var z1 = p[i].z * cosY + p[i].x * sinY;
+
+            var y1 = p[i].y * cosX - z1 * sinX;
+            var z2 = z1 * cosX + p[i].y * sinX;
+
+            p[i].x = x1;
+            p[i].y = y1;
+            p[i].z = z2;
+
+            var scale = fl / (fl + p[i].z);
+            p[i]._x = vpX + p[i].x * scale;
+            p[i]._y = vpY + p[i].y * scale;
+        }
+        var prevP = p[0];
+        for (var i = 1; i < numPoints; i++) {
+            if ((p[i].z < fl) && (prevP.z < fl) &&
+                    !(((prevP._x < 0) && (p[i]._x > canvas.width))
+                        || ((prevP._x > canvas.width) && (p[i]._x < 0))
+                        || ((prevP._y < 0) && (p[i]._y > canvas.height))
+                        || ((prevP._y > canvas.height) && (p[i]._y < 0)))){
+                context.beginPath();
+                context.moveTo(prevP._x, prevP._y);
+                context.lineTo(p[i]._x, p[i]._y);
+                context.stroke();
+            }
+            prevP = p[i];
+        }
+
+    };// end setup closure
+
+    // if this html document is ready we can begin thinking of the experiment setup
+    if(document.readyState === 'complete'){
+        experiment.setup();
+    } else {
+        window.onload = function (){
+            experiment.setup();
+        }
+    }
+</script>
+</body>
+</html>

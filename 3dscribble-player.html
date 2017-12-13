@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+
+        body {
+            background: #000000;
+            margin: 0;
+            padding: 0;
+        }
+
+        iframe {
+            background: #000000;
+            position:fixed;
+            top:0px;
+            left:0px;
+            bottom:0px;
+            right:0px;
+            width:100%;
+            height:100%;
+            border:none;
+            margin:0;
+            padding:0;
+            overflow:hidden;
+            z-index: 2;
+        }
+
+    </style>
+  </head>
+  <body>
+
+    <iframe src="3dscribble3.html" id="iframe"></iframe>
+
+    <script>
+        var iframe = document.getElementById('iframe');
+        var doodles = [
+            "3dscribble3.html"
+        ];
+        var unplayedDoodles;
+        function refillUnplayedDoodles() {
+            unplayedDoodles = [];
+            for (var d = 0; d < doodles.length; d++) {
+                unplayedDoodles.push(doodles[d]);
+            }
+        }
+        refillUnplayedDoodles();
+        var nTimesDoodleWillShown = 2;
+        var nTimesDoodleIsShown = 0;
+        var doodle;
+        function changeDoodle() {
+            var randomIndex = Math.floor(Math.random() * unplayedDoodles.length);
+            doodle = unplayedDoodles.splice(randomIndex, 1)[0];
+        }
+        changeDoodle();
+        function refreshDoodle() {
+            if (nTimesDoodleIsShown >= nTimesDoodleWillShown) {
+                if (!unplayedDoodles.length) {
+                    refillUnplayedDoodles();
+                }
+                changeDoodle();
+                nTimesDoodleIsShown = 0;
+            }
+            iframe.src = doodle;
+            nTimesDoodleIsShown++;
+        }
+        refreshDoodle();
+        setInterval(refreshDoodle, 8000);
+
+        function toggleFullScreen() {
+            if (!document.mozFullScreen && !document.webkitFullScreen) {
+                if (iframe.mozRequestFullScreen) {
+                    iframe.mozRequestFullScreen();
+                } else {
+                    iframe.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+                }
+            } else {
+                if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else {
+                    document.webkitCancelFullScreen();
+                }
+            }
+        }
+
+        document.addEventListener("keydown", function(e) {
+            if (e.keyCode == 13) {
+                toggleFullScreen();
+            }
+        }, false);
+
+    </script>
+
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86363810-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+  </body>
+</html>
