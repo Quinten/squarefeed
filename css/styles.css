@@ -1,0 +1,29 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #2c3e50;
+    color: #ecf0f1;
+    font-family: monospace;
+}
+
+a,
+a:hover,
+a:active,
+a:link,
+a:visited {
+    color: #ecf0f1;
+    text-decoration: underline;
+}
+
+.wrapper {
+    margin: 40px auto;
+    max-width: 960px;
+    padding: 0 15px;
+}
+
+@media (min-width: 769px) {
+
+    .wrapper {
+        padding: 0 40px;
+    }
+}
