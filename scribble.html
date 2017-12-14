@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <meta name="HandheldFriendly" content="True" />
+    <title>scribble</title>
+</head>
+<body>
+<canvas id="c">Sorry, your browser does not support canvas.</canvas>
+<script>
+    var experiment = {};
+    experiment.setup = function () {
+
+        // check if the browser has any idea if we can do the setup yet
+        if (!window.innerWidth) {
+            setTimeout(experiment.setup, 500);
+            return;
+        }
+
+        // grab canvas and drawing context
+        var canvas = document.getElementById('c'), context = canvas.getContext('2d');
+        if(!context){
+            return;
+        }
+
+        // some css tweaks
+        document.body.style.background = "#2c3e50";
+        document.body.style.margin = 0;
+        document.body.style.overflow = "hidden";
+
+        // fill canvas to browser size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        canvas.style.cursor = 'none';
+
+        // draw here
+        context.fillStyle = "#2c3e50";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        var plotter = {
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            d: 0, // 0 = up, 1 = right, 2 = down, 3 = left
+            alpha: 0,
+            down: false
+        };
+
+        for (var f = 0; f < 5000; f++){
+            context.beginPath();
+            context.moveTo(plotter.x, plotter.y);
+            // get a direction
+            var dirs = (plotter.d == 0 || plotter.d == 2) ? [1, 3] : [0, 2];
+            plotter.d = dirs[Math.floor(Math.random() * dirs.length)];
+            switch (plotter.d) {
+                case 0:
+                    plotter.y -= Math.random() * 40;
+                    if (plotter.y < 0) {
+                        plotter.y = 0;
+                    }
+                    break;
+                case 1:
+                    plotter.x += Math.random() * 40;
+                    if (plotter.x > canvas.width) {
+                        plotter.x = canvas.width;
+                    }
+                    break;
+                case 2:
+                    plotter.y += Math.random() * 40;
+                    if (plotter.y > canvas.height) {
+                        plotter.y = canvas.height;
+                    }
+                    break;
+                case 3:
+                    plotter.x -= Math.random() * 40;
+                    if (plotter.x < 0) {
+                        plotter.x = 0;
+                    }
+                    break;
+            }
+            if (plotter.down) {
+      		    plotter.alpha -= 0.01;
+      		    if (plotter.alpha < 0) {
+      			    plotter.alpha = 0;
+      			    plotter.down = false;
+      		    }
+      	    } else {
+      		    plotter.alpha += 0.01;
+      		    if (plotter.alpha > 1) {
+      			    plotter.alpha = 1;
+      			    plotter.down = true;
+      		    }
+      	    }
+            context.lineTo(plotter.x, plotter.y);
+            context.closePath();
+            context.globalAlpha = plotter.alpha;
+            context.strokeStyle = "#ecf0f1";
+            context.stroke();
+        }
+    };// end setup closure
+
+    // if this html document is ready we can begin thinking of the experiment setup
+    if(document.readyState === 'complete'){
+        experiment.setup();
+    } else {
+        window.onload = function (){
+            experiment.setup();
+        }
+    }
+</script>
+</body>
+</html>
