@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html><head>
+    <style> body { margin: 0px; padding: 0px; } </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        var canvas = document.getElementById('canvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        var context = canvas.getContext('2d');
+
+        context.beginPath();
+        context.rect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = '#2c3e50';
+        context.fill();
+
+        var nPrints = 56, prints = [];
+
+        for (var p = 0; p < nPrints; p++) {
+
+            var size = (32 + (Math.floor(Math.random() * 8) * 16));
+
+            var print = {
+                x: Math.floor(Math.random() * (canvas.width + 64)) - 32,
+                y: Math.floor(Math.random() * (canvas.height + 64)) - 32,
+                w: size,
+                h: size
+            };
+
+            context.beginPath();
+            context.rect(print.x, print.y, print.w, print.h);
+            context.fillStyle = '#ecf0f1';
+            context.fill();
+            prints.push(print);
+        }
+
+        for (p = 0; p < nPrints; p++) {
+
+            print = prints[p];
+
+            context.beginPath();
+            context.rect(print.x + 2, print.y + 2, print.w - 4, print.h - 4);
+            context.fillStyle = '#2c3e50';
+            context.fill();
+        }
+
+        for (p = 0; p < nPrints; p++) {
+
+            print = prints[p];
+
+            context.beginPath();
+            context.rect(print.x + 12, print.y + 12, print.w - 24, print.h - 24);
+            context.fillStyle = '#ecf0f1';
+            context.fill();
+        }
+
+        for (p = 0; p < nPrints; p++) {
+
+            print = prints[p];
+
+            context.beginPath();
+            context.rect(print.x + 14, print.y + 14, print.w - 28, print.h - 28);
+            context.fillStyle = '#2c3e50';
+            context.fill();
+        }
+
+    </script>
+</body></html>
