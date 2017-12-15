@@ -33,3 +33,5 @@ for (var s = 0; s < squares.length; s++) {
 
 var fs = require('fs');
 fs.writeFile('models/cube.obj', data);
+
+console.log('Done!');
