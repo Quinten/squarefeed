@@ -61,10 +61,32 @@ function createExtrusion(square) {
                 return;
             }
             break;
+        case '+y':
+            newVertices.push({x: vertices[square.a[0]].x, y: vertices[square.a[0]].y + size, z: vertices[square.a[0]].z});
+            newVertices.push({x: vertices[square.a[1]].x, y: vertices[square.a[1]].y + size, z: vertices[square.a[1]].z});
+            newVertices.push({x: vertices[square.a[2]].x, y: vertices[square.a[2]].y + size, z: vertices[square.a[2]].z});
+            newVertices.push({x: vertices[square.b[1]].x, y: vertices[square.b[1]].y + size, z: vertices[square.b[1]].z});
+            if (checkVertices(newVertices)) {
+                var vertexIndex = vertices.length;
+                vertices.push(...newVertices);
+                //console.log(vertices);
+                squares.push({a: [vertexIndex, vertexIndex + 1, vertexIndex + 2], b: [vertexIndex, vertexIndex + 3, vertexIndex + 1], d: '+y', e: false}); // bottom
+                squares.push({a: [square.a[0], vertexIndex + 3, vertexIndex], b: [square.a[0], square.b[1], vertexIndex + 3], d: '+z', e: false}); // back
+                squares.push({a: [square.a[1], vertexIndex + 2, vertexIndex + 1], b: [square.a[1], square.a[2], vertexIndex + 2], d: '-z', e: false}); // front
+                squares.push({a: [square.a[2], vertexIndex, vertexIndex + 2], b: [square.a[2], square.a[0], vertexIndex], d: '-x', e: false}); // left
+                squares.push({a: [square.b[1], vertexIndex + 1, vertexIndex + 3], b: [square.b[1], square.a[1], vertexIndex + 1], d: '+x', e: false}); // right
+                square.e = true;
+            } else {
+                return;
+            }
+            break;
     }
 }
 
-createExtrusion(squares[3]);
+//createExtrusion(squares[3]);
+//createExtrusion(squares[6]);
+
+createExtrusion(squares[4]);
 createExtrusion(squares[6]);
 
 // write to file
