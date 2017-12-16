@@ -80,14 +80,41 @@ function createExtrusion(square) {
                 return;
             }
             break;
+        case '-x':
+            newVertices.push({x: vertices[square.a[0]].x - size, y: vertices[square.a[0]].y, z: vertices[square.a[0]].z});
+            newVertices.push({x: vertices[square.a[1]].x - size, y: vertices[square.a[1]].y, z: vertices[square.a[1]].z});
+            newVertices.push({x: vertices[square.a[2]].x - size, y: vertices[square.a[2]].y, z: vertices[square.a[2]].z});
+            newVertices.push({x: vertices[square.b[1]].x - size, y: vertices[square.b[1]].y, z: vertices[square.b[1]].z});
+            if (checkVertices(newVertices)) {
+                var vertexIndex = vertices.length;
+                vertices.push(...newVertices);
+                //console.log(vertices);
+                squares.push({a: [vertexIndex, vertexIndex + 1, vertexIndex + 2], b: [vertexIndex, vertexIndex + 3, vertexIndex + 1], d: '-x', e: false}); // left
+                squares.push({a: [square.a[0], vertexIndex + 3, vertexIndex], b: [square.a[0], square.b[1], vertexIndex + 3], d: '+y', e: false}); // bottom
+                squares.push({a: [square.a[1], vertexIndex + 2, vertexIndex + 1], b: [square.a[1], square.a[2], vertexIndex + 2], d: '-y', e: false}); // top
+                squares.push({a: [square.a[2], vertexIndex, vertexIndex + 2], b: [square.a[2], square.a[0], vertexIndex], d: '+z', e: false}); // back
+                squares.push({a: [square.b[1], vertexIndex + 1, vertexIndex + 3], b: [square.b[1], square.a[1], vertexIndex + 1], d: '-z', e: false}); // front
+                square.e = true;
+            } else {
+                return;
+            }
+            break;
     }
 }
 
-//createExtrusion(squares[3]);
+createExtrusion(squares[3]);
 //createExtrusion(squares[6]);
 
-createExtrusion(squares[4]);
-createExtrusion(squares[6]);
+//createExtrusion(squares[4]);
+//createExtrusion(squares[6]);
+
+createExtrusion(squares[2]);
+
+/*
+for (var i = 0; i < 500; i++) {
+    createExtrusion(squares[Math.floor(Math.random() * squares.length)]);
+}
+*/
 
 // write to file
 var data = '#extrusions\n';
