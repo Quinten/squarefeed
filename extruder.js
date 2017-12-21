@@ -23,6 +23,9 @@ squares.push({a: [6, 7, 5], b: [6, 8, 7], d: '+z', e: false}); // back
 function checkVertices(newVertices) {
     for (var n = 0; n < newVertices.length; n++) {
         for (var v = 0; v < vertices.length; v++) {
+            if (newVertices[n].x > 48 || newVertices[n].y > 48 || newVertices[n].z > 48 || newVertices[n].x < -48 || newVertices[n].y < -48 || newVertices[n].z < -48) {
+                return false;
+            }
             if (vertices[v].x == newVertices[n].x && vertices[v].y == newVertices[n].y && vertices[v].z == newVertices[n].z) {
                 return false;
             }
@@ -173,11 +176,16 @@ function createExtrusion(square) {
 
 //createExtrusion(squares[5]);
 
-for (var i = 0; i < 512; i++) {
+for (var i = 0; i < 1000000; i++) {
     createExtrusion(squares[Math.floor(Math.random() * squares.length)]);
     createExtrusion(squares[squares.length - 5]);
 }
 
+var all = squares.length;
+
+for (var i = 0; i < all; i++) {
+    createExtrusion(squares[i]);
+}
 
 // write to file
 var data = '#extrusions\n';
