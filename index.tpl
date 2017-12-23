@@ -11,7 +11,7 @@
 
         <h1>De nacht van het vierkant</h1>
 
-        <ul><li><a href="html/3dscribble.html">3dscribble</a></li><li><a href="html/merging.html">Merging</a></li><li><a href="html/patches.html">Patches</a></li><li><a href="html/scribble.html">Scribble</a></li></ul>
+        <ul>{{getLinks()}}</ul>
 
         <p>Speel alles af in een <a href="player.html">loop</a></p>
 

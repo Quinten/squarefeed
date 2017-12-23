@@ -34,7 +34,7 @@
 
     <script>
         var iframe = document.getElementById('iframe');
-        var doodles = ["html/3dscribble.html", "html/merging.html", "html/patches.html", "html/scribble.html", ];
+        var doodles = [{{getSlides()}}];
         var unplayedDoodles;
         function refillUnplayedDoodles() {
             unplayedDoodles = [];
