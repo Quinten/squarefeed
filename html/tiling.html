@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <meta name="HandheldFriendly" content="True" />
+  <title>tiling</title>
+</head>
+<body>
+<canvas id="c">Sorry, your browser does not support canvas.</canvas>
+<script>
+    var experiment = {};
+    experiment.setup = function () {
+
+      // check if the browser has any idea if we can do the setup yet
+      if (!window.innerWidth) {
+        setTimeout(experiment.setup, 500);
+        return;
+      }
+
+      // grab canvas and drawing context
+      var canvas = document.getElementById('c'), context = canvas.getContext('2d');
+      if(!context){
+        return;
+      }
+
+      var invert = !(Math.random() > .5);
+
+      // some css tweaks
+      document.body.style.background = (invert) ? "hsl(" + Math.floor(Math.random() * 360) + ", 5%, 85%)" : "hsl(" + Math.floor(Math.random() * 360) + ", 45%, 30%)";
+      document.body.style.margin = 0;
+      document.body.style.overflow = "hidden";
+
+      // draw here
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      var tileWidth = 40;
+      var tileHeight = 40;
+      var nTilesX = Math.ceil(canvas.width / tileWidth);
+      var nTilesY = Math.ceil(canvas.height / tileHeight);
+
+      var tileTypes = [
+          {up: 0, right: 0, down: 0, left: 0},
+          {up: 1, right: 0, down: 1, left: 0},
+          {up: 0, right: 1, down: 0, left: 1},
+          {up: 1, right: 1, down: 1, left: 1},
+          {up: 1, right: 1, down: 0, left: 0},
+          {up: 0, right: 1, down: 1, left: 0},
+          {up: 0, right: 0, down: 1, left: 1},
+          {up: 1, right: 0, down: 0, left: 1},
+          {up: 1, right: 1, down: 0, left: 1},
+          {up: 1, right: 1, down: 1, left: 0},
+          {up: 0, right: 1, down: 1, left: 1},
+          {up: 1, right: 0, down: 1, left: 1}
+      ];
+
+      var tileOptions = [[],[]];
+
+      // top left: 1 option with all types
+      // start tile
+      tileOptions[0][0] = [
+          [0,1,2,3,4,5,6,7,8,9,10,11]
+      ];
+      // top right: 2 options considering left
+      tileOptions[1][0] = [
+          [0,1,4,5,9],
+          [2,3,6,7,8,10,11]
+      ];
+      // bottom left: 2 options depending on top
+      tileOptions[0][1] = [
+          [0,2,5,6,10],
+          [1,3,4,7,8,9,11]
+      ];
+      // bottom right: 4 options depending on left and top
+      // 0 0, 1 0, 0 1, 1 1
+      tileOptions[1][1] = [];
+      tileOptions[1][1][0] = [];
+      tileOptions[1][1][1] = [];
+      tileOptions[1][1][0][0] = [0,5];
+      tileOptions[1][1][1][0] = [2,6,10];
+      tileOptions[1][1][0][1] = [1,4,9];
+      tileOptions[1][1][1][1] = [3,7,8,11];
+
+      var tiles = [];
+
+      context.fillStyle = (!invert) ? "hsl(" + Math.floor(Math.random() * 360) + ", 5%, 85%)" : "hsl(" + Math.floor(Math.random() * 360) + ", 45%, 30%)";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.globalCompositeOperation = 'destination-out';
+
+      var img = new Image();
+      img.onload = function (e) {
+
+          for (var y = 0; y < nTilesY; y++) {
+              tiles[y] = [];
+              for (var x = 0; x < nTilesX; x++) {
+                  var tileOption;
+                  if (x === 0 && y === 0) {
+                      tileOption = tileOptions[0][0][0]
+                  } else if (y === 0) {
+                      tileOption = tileOptions[1][0][tiles[0][x - 1].right];
+                  } else if (x === 0) {
+                      tileOption = tileOptions[0][1][tiles[y - 1][0].down];
+                  } else {
+                      tileOption = tileOptions[1][1][tiles[y][x - 1].right][tiles[y - 1][x].down];
+                  }
+                  var tileIndex = tileOption[Math.floor(Math.random() * tileOption.length)];
+                  tiles[y][x] = tileTypes[tileIndex];
+                  context.drawImage(img, tileIndex * tileWidth, 0, tileWidth, tileHeight, x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+              }
+          }
+      };
+      img.src = '../assets/tiles.png';
+
+    };// end setup closure
+
+    // if this html document is ready we can begin thinking of the experiment setup
+    if(document.readyState === 'complete'){
+      experiment.setup();
+    } else {
+      window.onload = function (){
+        experiment.setup();
+      }
+    }
+</script>
+</body>
+</html>
