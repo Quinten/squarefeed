@@ -24,8 +24,13 @@
             return;
         }
 
+        var invert = !(Math.random() > .5);
+        var bgColor = (invert) ? "hsl(" + Math.floor(Math.random() * 360) + ", 5%, 85%)" : "hsl(" + Math.floor(Math.random() * 360) + ", 45%, 30%)";
+        var strokeColor = (!invert) ? "hsl(" + Math.floor(Math.random() * 360) + ", 5%, 85%)" : "hsl(" + Math.floor(Math.random() * 360) + ", 45%, 30%)";
+
+
         // some css tweaks
-        document.body.style.background = "#2c3e50";
+        document.body.style.background = bgColor;
         document.body.style.margin = 0;
         document.body.style.overflow = "hidden";
 
@@ -35,7 +40,7 @@
         canvas.style.cursor = 'none';
 
         // draw here
-        context.fillStyle = "#2c3e50";
+        context.fillStyle = bgColor;
         context.fillRect(0, 0, canvas.width, canvas.height);
 
         var plotter = {
@@ -79,22 +84,22 @@
                     break;
             }
             if (plotter.down) {
-      		    plotter.alpha -= 0.01;
-      		    if (plotter.alpha < 0) {
-      			    plotter.alpha = 0;
-      			    plotter.down = false;
-      		    }
-      	    } else {
-      		    plotter.alpha += 0.01;
-      		    if (plotter.alpha > 1) {
-      			    plotter.alpha = 1;
-      			    plotter.down = true;
-      		    }
-      	    }
+                plotter.alpha -= 0.01;
+                if (plotter.alpha < 0) {
+                    plotter.alpha = 0;
+                    plotter.down = false;
+                }
+            } else {
+                plotter.alpha += 0.01;
+                if (plotter.alpha > 1) {
+                    plotter.alpha = 1;
+                    plotter.down = true;
+                }
+            }
             context.lineTo(plotter.x, plotter.y);
             context.closePath();
             context.globalAlpha = plotter.alpha;
-            context.strokeStyle = "#ecf0f1";
+            context.strokeStyle = strokeColor;
             context.stroke();
         }
     };// end setup closure
