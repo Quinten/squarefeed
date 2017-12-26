@@ -11,9 +11,13 @@
         canvas.style.cursor = 'none';
         var context = canvas.getContext('2d');
 
+        var invert = !(Math.random() > .5);
+        var bgColor = (invert) ? "hsl(" + Math.floor(Math.random() * 360) + ", 5%, 85%)" : "hsl(" + Math.floor(Math.random() * 360) + ", 45%, 30%)";
+        var strokeColor = (!invert) ? "hsl(" + Math.floor(Math.random() * 360) + ", 5%, 85%)" : "hsl(" + Math.floor(Math.random() * 360) + ", 45%, 30%)";
+
         context.beginPath();
         context.rect(0, 0, canvas.width, canvas.height);
-        context.fillStyle = '#2c3e50';
+        context.fillStyle = bgColor;
         context.fill();
 
         var nPrints = 56, prints = [];
@@ -31,7 +35,7 @@
 
             context.beginPath();
             context.rect(print.x, print.y, print.w, print.h);
-            context.fillStyle = '#ecf0f1';
+            context.fillStyle = strokeColor;
             context.fill();
             prints.push(print);
         }
@@ -42,7 +46,7 @@
 
             context.beginPath();
             context.rect(print.x + 2, print.y + 2, print.w - 4, print.h - 4);
-            context.fillStyle = '#2c3e50';
+            context.fillStyle = bgColor;
             context.fill();
         }
 
@@ -52,7 +56,7 @@
 
             context.beginPath();
             context.rect(print.x + 12, print.y + 12, print.w - 24, print.h - 24);
-            context.fillStyle = '#ecf0f1';
+            context.fillStyle = strokeColor;
             context.fill();
         }
 
@@ -62,7 +66,7 @@
 
             context.beginPath();
             context.rect(print.x + 14, print.y + 14, print.w - 28, print.h - 28);
-            context.fillStyle = '#2c3e50';
+            context.fillStyle = bgColor;
             context.fill();
         }
 
