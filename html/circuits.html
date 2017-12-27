@@ -1,0 +1,230 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+
+        var invert = !(Math.random() > .5);
+        var bgColor = (invert) ? "hsl(" + Math.floor(Math.random() * 360) + ", 5%, 85%)" : "hsl(" + Math.floor(Math.random() * 360) + ", 45%, 30%)";
+        var strokeColor = (!invert) ? "hsl(" + Math.floor(Math.random() * 360) + ", 5%, 85%)" : "hsl(" + Math.floor(Math.random() * 360) + ", 45%, 30%)";
+
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        var width = canvas.width;
+        var height = canvas.height;
+        var gridWidth = Math.floor(width / 44);
+        var gridHeight = Math.floor(gridWidth * height / width);
+        var unitX = canvas.width / (gridWidth + 2);
+        var unitY = canvas.height / (gridHeight + 2);
+        var offsetX = unitX;
+        var offsetY = unitY;
+
+        var availablePositions = [];
+        var up = [];
+        var right = [];
+        var down = [];
+        var left = [];
+
+        context.fillStyle = bgColor;
+
+        context.rect(0, 0, width, height);
+        context.fill();
+
+        context.fillStyle = bgColor;
+        context.strokeStyle = strokeColor;
+        context.lineWidth = 2;
+
+        for (var x = 0; x <= gridWidth; x++) {
+            for (var y = 0; y <= gridHeight; y++) {
+                availablePositions.push({x: x, y: y});
+            }
+        }
+
+        for (var x = 0; x <= gridWidth; x++) {
+            up[x] = [];
+            down[x] = [];
+        }
+
+        for (var y = 0; y <= gridHeight; y++) {
+            right[y] = [];
+            left[y] = [];
+        }
+
+        function getRandomPoints() {
+
+            if (availablePositions.length === 0) {
+                return false;
+            }
+
+            while (availablePositions.length) {
+
+                var randomPositionIndex = Math.floor(Math.random() * availablePositions.length);
+                var position = availablePositions.splice(randomPositionIndex, 1);
+                var x = position[0].x;
+                var y = position[0].y;
+
+                var drawUp = true;
+                for (var d = 0; d < up[x].length; d++) {
+                    if (up[x][d] <= y) {
+                        drawUp = false;
+                        break;
+                    }
+                }
+
+                var drawRight = true;
+                for (var d = 0; d < right[y].length; d++) {
+                    if (right[y][d] >= x) {
+                        drawRight = false;
+                        break;
+                    }
+                }
+
+                var drawDown = true;
+                for (var d = 0; d < down[x].length; d++) {
+                    if (down[x][d] >= y) {
+                        drawDown = false;
+                        break;
+                    }
+                }
+
+                var drawLeft = true;
+                for (var d = 0; d < left[y].length; d++) {
+                    if (left[y][d] <= x) {
+                        drawLeft = false;
+                        break;
+                    }
+                }
+
+                if (drawUp || drawRight || drawDown || drawLeft) {
+
+                    // don't go through a dot
+                    up[x].push(y);
+                    right[y].push(x);
+                    down[x].push(y);
+                    left[y].push(x);
+
+                    var edges = [drawUp, drawRight, drawDown, drawLeft];
+                    var leftEdges = [];
+                    for (var e = 0; e < edges.length; e++) {
+                        if (edges[e]) {
+                            leftEdges.push(e);
+                        }
+                    }
+
+                    var edgeNumber = leftEdges[Math.floor(Math.random() * leftEdges.length)];
+                    switch (edgeNumber) {
+                        case 0:
+                            // draw up
+                            for (var d = y; d > -1; d--) {
+                                //up[x].push(d);
+                                //right[y].push(d);
+                                //down[x].push(d);
+                                //left[y].push(d);
+                                var toRemove = [];
+                                for (var a = 0; a < availablePositions.length; a++) {
+                                    if (availablePositions[a].y == d && availablePositions[a].x == x) {
+                                        toRemove.push(a);
+                                    }
+                                }
+                                for (var r = 0; r < toRemove.length; r++) {
+                                    availablePositions.splice(toRemove[r], 1);
+                                }
+                            }
+                            return {endX: x, endY: y, startX: x, startY: -5};
+                        case 1:
+                            // draw right
+                            for (var d = x; d <= gridWidth; d++) {
+                                //up[x].push(d);
+                                //right[y].push(d);
+                                //down[x].push(d);
+                                //left[y].push(d);
+                                var toRemove = [];
+                                for (var a = 0; a < availablePositions.length; a++) {
+                                    if (availablePositions[a].x == d && availablePositions[a].y == y) {
+                                        toRemove.push(a);
+                                    }
+                                }
+                                for (var r = 0; r < toRemove.length; r++) {
+                                    availablePositions.splice(toRemove[r], 1);
+                                }
+                            }
+                            return {endX: x, endY: y, startX: gridWidth + 5, startY: y};
+                        case 2:
+                            // draw down
+                            for (var d = y; d <= gridHeight; d++) {
+                                //up[x].push(d);
+                                //right[y].push(d);
+                                //down[x].push(d);
+                                //left[y].push(d);
+                                var toRemove = [];
+                                for (var a = 0; a < availablePositions.length; a++) {
+                                    if (availablePositions[a].y == d && availablePositions[a].x == x) {
+                                        toRemove.push(a);
+                                    }
+                                }
+                                for (var r = 0; r < toRemove.length; r++) {
+                                    availablePositions.splice(toRemove[r], 1);
+                                }
+                            }
+                            return {endX: x, endY: y, startX: x, startY: gridHeight + 5};
+                        case 3:
+                            // draw left
+                            for (var d = x; d > -1; d--) {
+                                //up[x].push(d);
+                                //right[y].push(d);
+                                //down[x].push(d);
+                                //left[y].push(d);
+                                var toRemove = [];
+                                for (var a = 0; a < availablePositions.length; a++) {
+                                    if (availablePositions[a].x == d && availablePositions[a].y == y) {
+                                        toRemove.push(a);
+                                    }
+                                }
+                                for (var r = 0; r < toRemove.length; r++) {
+                                    availablePositions.splice(toRemove[r], 1);
+                                }
+                            }
+                            return {endX: x, endY: y, startX: -5, startY: y};
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        function drawLine(startX, startY, endX, endY) {
+            context.beginPath();
+            context.moveTo(offsetX + (startX * unitX), offsetY + (startY * unitY));
+            context.lineTo(offsetX + (endX * unitX), offsetY + (endY * unitY));
+            context.stroke();
+            context.beginPath();
+            //context.arc(offsetX + (endX * unitX), offsetY + (endY * unitY), 6, 0, 2 * Math.PI, false);
+            context.moveTo(offsetX + (endX * unitX), offsetY + (endY * unitY) - unitY / 3);
+            context.lineTo(offsetX + (endX * unitX) + unitX / 3, offsetY + (endY * unitY));
+            context.lineTo(offsetX + (endX * unitX), offsetY + (endY * unitY) + unitY / 3);
+            context.lineTo(offsetX + (endX * unitX) - unitX / 3, offsetY + (endY * unitY));
+            context.closePath();
+            context.fill();
+            context.stroke();
+        }
+
+        var line;
+        while (line = getRandomPoints()) {
+            drawLine(line.startX, line.startY, line.endX, line.endY);
+        }
+
+    </script>
+  </body>
+</html>
