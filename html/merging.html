@@ -20,7 +20,7 @@
         context.fillStyle = bgColor;
         context.fill();
 
-        var nPrints = 56, prints = [];
+        var nPrints = Math.floor((canvas.width / 64) * (canvas.height / 64)), prints = [];
 
         for (var p = 0; p < nPrints; p++) {
 
