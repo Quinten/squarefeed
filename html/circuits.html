@@ -19,8 +19,15 @@
         var canvas = document.getElementById('canvas');
         var context = canvas.getContext('2d');
 
+        // some css tweaks
+        document.body.style.background = bgColor;
+        document.body.style.margin = 0;
+        document.body.style.overflow = "hidden";
+
+        // fill canvas to browser size
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        canvas.style.cursor = 'none';
 
         var width = canvas.width;
         var height = canvas.height;
