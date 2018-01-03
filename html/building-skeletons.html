@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html><head>
+    <style> body { margin: 0px; padding: 0px; overflow: hidden; } </style>
+</head>
+<body>
+    <script src="../lib/depthkit.min.js"></script>
+    <script>
+
+        var invert = !(Math.random() > .5);
+        var bgColor = (invert) ? "hsl(" + Math.floor(Math.random() * 360) + ", 5%, 85%)" : "hsl(" + Math.floor(Math.random() * 360) + ", 45%, 30%)";
+        var strokeColor = (!invert) ? "hsl(" + Math.floor(Math.random() * 360) + ", 5%, 85%)" : "hsl(" + Math.floor(Math.random() * 360) + ", 45%, 30%)";
+
+        var engine = new DK.Engine();
+        engine.viewport.fillPage();
+        engine.viewport.setBackgroundcolor(bgColor);
+
+        var _frameSize = 32;
+        var _gridX = 6;
+        var _gridY = 18;
+        var _depthX = 12;
+        var _depthZ = 8;
+
+        function createFrame(x, y, frameSize) {
+            var mesh = new DK.Mesh(x * frameSize, y * frameSize, 0);
+            mesh.strokeColor = strokeColor;
+            mesh.strokeWidth = 2;
+
+            mesh.addVertex(-frameSize/2, -frameSize/2, 0);
+            mesh.addVertex(frameSize/2, -frameSize/2, 0).addEdge();
+            mesh.addVertex(frameSize/2, frameSize/2, 0).addEdge();
+            mesh.addVertex(-frameSize/2, frameSize/2, 0).addEdge();
+            mesh.addEdge(mesh.vertices[3], mesh.vertices[0]);
+
+            if (Math.random() < .5) {
+                mesh.addFace(mesh.vertices[0], mesh.vertices[1], mesh.vertices[3], strokeColor);
+                mesh.addFace(mesh.vertices[3], mesh.vertices[1], mesh.vertices[0], strokeColor);
+                mesh.addFace(mesh.vertices[2], mesh.vertices[3], mesh.vertices[1], strokeColor);
+                mesh.addFace(mesh.vertices[1], mesh.vertices[3], mesh.vertices[2], strokeColor);
+            }
+
+            return mesh;
+        }
+
+        function createFacade(x, z, gridX, gridY) {
+            var facade = new DK.Container(x, 0, z);
+            for (var x = 0; x < gridX; x++) {
+                for (var y = 0; y < gridY; y++) {
+                    if (y > 4 && Math.random() > .8) {
+                        break;
+                    }
+                    facade.addChild(createFrame(x - (gridX / 2), (gridY / 2) - y, _frameSize));
+                }
+            }
+            return facade;
+        }
+
+        function createBuilding(x, z) {
+            var building = new DK.Container(x * _frameSize * _gridX, 0, z * _frameSize * _gridX);
+            building.addChild(createFacade(0, (_gridX - 1) / 2 * _frameSize, _gridX, _gridY));
+            building.addChild(createFacade(0, - ((_gridX + 1) / 2 * _frameSize), _gridX, _gridY));
+            building.addChild(createFacade((_gridX - 1) / 2 * _frameSize, 0, _gridX, _gridY).rotateY(90));
+            building.addChild(createFacade(- ((_gridX + 1) / 2 * _frameSize), 0, _gridX, _gridY).rotateY(90));
+            return building;
+        }
+
+        // sample color for fog
+        engine.renderer.viewport.context.save();
+        engine.renderer.viewport.context.fillStyle = bgColor;
+        engine.renderer.viewport.context.fillRect(0, 0, 2, 2);
+        engine.renderer.viewport.context.restore();
+
+        var data, r, g, b;
+        data = engine.renderer.viewport.context.getImageData(0, 0, 1, 1).data;
+        r = data[0];
+        g = data[1];
+        b = data[2];
+        function checkHex(v) {
+            return 1 === v.length ? '0'+v : v;
+        }
+        var bgColorHex = '#'+checkHex(r.toString(16))+checkHex(g.toString(16))+checkHex(b.toString(16));
+
+        engine.renderer.fog = new DK.Fog(bgColorHex, 4000);
+
+        var city = new DK.Container();
+        for (var x = 0; x < _depthX; x++) {
+            for (var z = 0; z < _depthZ; z++) {
+                if (z > 4 && Math.random() > .8) {
+                    break;
+                }
+                city.addChild(createBuilding(x - _depthX / 4, _depthZ - z));
+            }
+        }
+        engine.scene.addChild(city);
+
+        //city.rotateX(-65 - Math.random() * 25);
+        //city.rotateY(-25 + Math.random() * 50);
+        city.rotateY(45);
+
+        engine.renderer.render();
+
+    </script>
+</body></html>
