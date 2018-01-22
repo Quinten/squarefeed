@@ -40,7 +40,7 @@ templates.forEach(template => {
     if (template.indexOf('.tpl') >= 0 && template.indexOf('.swp') < 0) {
         let templateHtml = fs.readFileSync(template, { encoding: 'utf8', flag: 'r' });
         templateHtml = replaceVars(templateHtml);
-        fs.writeFile(template.replace('.tpl', '.html'), templateHtml);
+        fs.writeFileSync(template.replace('.tpl', '.html'), templateHtml);
     }
 });
 

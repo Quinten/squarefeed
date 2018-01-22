@@ -1,7 +1,7 @@
 {
-  "name": "de-nacht-van-het-vierkant",
+  "name": "squarefeed",
   "version": "0.0.1",
-  "description": "Project for De Nacht van de Musea",
+  "description": "Project for squared eyed people",
   "main": "index.html",
   "scripts": {
     "start": "open http://localhost:4000/ && node server.js",
@@ -9,12 +9,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Quinten/de-nacht-van-het-vierkant.git"
+    "url": "git+https://github.com/Quinten/squarefeed.git"
   },
   "author": "Quinten Clause",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Quinten/de-nacht-van-het-vierkant/issues"
+    "url": "https://github.com/Quinten/squarefeed/issues"
   },
-  "homepage": "https://github.com/Quinten/de-nacht-van-het-vierkant#readme"
+  "homepage": "https://github.com/Quinten/squarefeed#readme"
 }

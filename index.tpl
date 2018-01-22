@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <title>De nacht van het vierkant</title>
+    <title>Squarefeed</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
   </head>
@@ -9,11 +9,15 @@
 
     <div class="wrapper">
 
-        <h1>De nacht van het vierkant</h1>
+        <h1>Squarefeed</h1>
+
+        <p>An extension of <a href="https://quinten.github.io/doodles/">doodles</a></p>
 
         <ul>{{getLinks()}}</ul>
 
-        <p>Speel alles af in een <a href="player.html">loop</a></p>
+        <p>Show all doodles in a <a href="player.html">loop</a> (hit enter on that page without clicking anywhere to go fullscreen)</p>
+
+        <p>Check source code on <a href="https://github.com/Quinten/squarefeed">github</a></p>
 
     </div>
 
