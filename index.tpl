@@ -15,7 +15,7 @@
 
         <ul>{{getLinks()}}</ul>
 
-        <p>Show all doodles in a <a href="player.html">loop</a> (hit enter on that page without clicking anywhere to go fullscreen)</p>
+        <p>Show all doodles in a <a href="player.html" target="_blank">loop</a> (hit enter on that page without clicking anywhere to go fullscreen)</p>
 
         <p>Check source code on <a href="https://github.com/Quinten/squarefeed">github</a></p>
 
