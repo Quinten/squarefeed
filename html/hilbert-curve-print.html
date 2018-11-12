@@ -98,11 +98,11 @@
             mesh.addVertex(curr[0]*blockSize + offset, ypos, curr[1]*blockSize - offsetZ).addEdge();
             switch (p % 2) {
                     case 0:
-                        ypos += blockSize*10;
+                        ypos += blockSize * 2.5;
                         mesh.addVertex(curr[0]*blockSize + offset, ypos, curr[1]*blockSize - offsetZ).addEdge();
                     break;
                     case 1:
-                        ypos -= blockSize*10;
+                        ypos -= blockSize * 2.5;
                         mesh.addVertex(curr[0]*blockSize + offset, ypos, curr[1]*blockSize - offsetZ).addEdge();
                     break;
             }
